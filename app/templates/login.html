@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Представься тварь</h1>
+<br>
+<form action="" method="post" name="login">
+    <div class="form-group">
+        <label for="name">Имя, сестра, имя!</label>
+        {{form.name(size=80, class_="form-control")}}<br>
+        {% for error in form.errors.name %}
+        <span style="color: red;">{{error}}</span>
+        {% endfor %}<br>
+    </div>
+    <p><input type="submit" value="Arrrgh!" class="btn btn-primary"></p>
+</form>
+{% endblock %}
