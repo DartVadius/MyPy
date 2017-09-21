@@ -1,29 +1,16 @@
-from flask import render_template, flash, redirect, request, url_for, session
+from flask import render_template, flash, redirect, request, url_for, session, jsonify
 from app import app
 from app import forms
+from app.models import Book
+from app.database import db_session
 
 
 @app.route('/books')
 def index():
-    user = {'nickname': 'Pedro'}
-    books = [
-        {
-            'author': {'name': 'Jaroslav Hašek'},
-            'title': 'The Fateful Adventures of the Good Soldier Švejk During the World War'
-        },
-        {
-            'author': {'name': 'Glen Cook'},
-            'title': 'The Black Company'
-        },
-        {
-            'author': {'name': 'Stephen King'},
-            'title': 'The Tommyknockers'
-        },
-    ]
+    books = Book.all(Book)
     if 'username' in session:
         return render_template("books.html",
                                title='Home',
-                               user=user,
                                books=books)
     return redirect(url_for('login'))
 
@@ -35,7 +22,7 @@ def login():
     if request.method == 'POST' and form.validate():
         name = form.name.data
         session['username'] = name
-        flash('А туда ли ты зашел, ' + name + '?!')
+        flash('Hi, ' + name + '!')
         return redirect(url_for('index'))
     return render_template('login.html',
                            title='Sign In',
@@ -44,12 +31,35 @@ def login():
 
 @app.route('/odminko', methods=['GET', 'POST'])
 def odminko():
-    return render_template('odminko.html',
-                           title='Odminko',
-                           )
+    books = Book.all(Book)
+    form = forms.Book(request.form)
+
+    if request.method == 'POST' and form.validate() and 'username' in session:
+        author = form.author.data
+        title = form.title.data
+        book = Book(author, title)
+        db_session.add(book)
+        db_session.commit()
+        return redirect(url_for('odminko'))
+
+    if 'username' in session:
+        return render_template("odminko.html",
+                               title='Odminko',
+                               books=books,
+                               form=form)
+    return redirect(url_for('login'))
 
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect(url_for('login'))
+
+
+@app.route('/kill', methods=['GET', 'POST'])
+def kill():
+    book_id = None
+    if request.method == "POST":
+        book_id = request.json
+        Book.delete(Book, book_id)
+    return jsonify(book_id)
