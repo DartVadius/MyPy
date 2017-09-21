@@ -28,7 +28,8 @@
     <tr>
         <td>{{book.author}}</td>
         <td>{{book.title}}</td>
-        <td><a href='#' id="{{book.id}}" class="btn btn-primary kill">Kill it</a></td>
+        <td><a href='#' id="{{book.id}}" class="btn btn-sm btn-danger small kill"><i class="fa fa-window-close" aria-hidden="true"></i>
+</a></td>
     </tr>
     {% endfor %}
     </tbody>
@@ -43,11 +44,10 @@
                 contentType: 'application/json',
                 url: '/kill',
                 success: function (response) {
-                console.log(response);
+                location.reload()
                 }
             });
         });
-    })
-
+    });
 </script>
 {% endblock %}

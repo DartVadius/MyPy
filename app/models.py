@@ -18,6 +18,3 @@ class Book(Base):
 
     def all(self):
         return self.query.all()
-
-    def delete(self, book_id):
-        return self.query.filter(self.id == book_id).delete()

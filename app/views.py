@@ -22,7 +22,7 @@ def login():
     if request.method == 'POST' and form.validate():
         name = form.name.data
         session['username'] = name
-        flash('Hi, ' + name + '!')
+        flash('Hi,  P̶e̶d̶r̶o̶ ' + name + '!')
         return redirect(url_for('index'))
     return render_template('login.html',
                            title='Sign In',
@@ -58,8 +58,9 @@ def logout():
 
 @app.route('/kill', methods=['GET', 'POST'])
 def kill():
-    book_id = None
     if request.method == "POST":
         book_id = request.json
-        Book.delete(Book, book_id)
-    return jsonify(book_id)
+        book = db_session.query(Book).filter_by(id=book_id).first()
+        db_session.delete(book)
+        db_session.commit()
+        return redirect(url_for('odminko'))
