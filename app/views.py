@@ -22,7 +22,7 @@ def login():
     if request.method == 'POST' and form.validate():
         name = form.name.data
         session['username'] = name
-        flash('Hi,  P̶e̶d̶r̶o̶ ' + name + '!')
+        flash('Hi, ' + name + '!')
         return redirect(url_for('index'))
     return render_template('login.html',
                            title='Sign In',
