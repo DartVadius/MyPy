@@ -7,7 +7,7 @@ from app.database import db_session
 
 @app.route('/books')
 def index():
-    books = Book.all(Book)
+    books = db_session.query(Book).all()
     if 'username' in session:
         return render_template("books.html",
                                title='Home',
@@ -31,7 +31,8 @@ def login():
 
 @app.route('/odminko', methods=['GET', 'POST'])
 def odminko():
-    books = Book.all(Book)
+
+    books = db_session.query(Book).all()
     form = forms.Book(request.form)
 
     if request.method == 'POST' and form.validate() and 'username' in session:

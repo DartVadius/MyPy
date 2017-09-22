@@ -15,6 +15,3 @@ class Book(Base):
 
     def __repr__(self):
         return '<Book %r>' % (self.author + self.title)
-
-    def all(self):
-        return self.query.all()
